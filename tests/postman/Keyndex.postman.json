@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "2b6a465e-dd2e-4fb2-b380-2e7cdb0f284f",
+		"name": "Keyndex",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22419247"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Sign In",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"phone\": \"test@123.gom\",\r\n    \"password\": \"password@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/sign-in",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"sign-in"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Sign Up",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"test\",\r\n    \"email\": \"test@123.gom\",\r\n    \"password\": \"password@123\",\r\n    \"re_password\": \"password@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/sign-up",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"sign-up"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Forget Password",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/forget-password?email=1234567890",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"forget-password"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "1234567890"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify OTP",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/forget-password?ref=test@gmail.com",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"forget-password"
+									],
+									"query": [
+										{
+											"key": "ref",
+											"value": "test@gmail.com"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Resent OTP",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/forget-password?ref=",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"forget-password"
+									],
+									"query": [
+										{
+											"key": "ref",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Sign out",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{WINNERS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/sign-out",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"sign-out"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "A transaction records money moving in or out of an account. Transactions at the Intergalactic Bank should follow a blockchain-like approach. Once created, they cannot be updated or deleted, so we will have only endpoints to get or create transactions."
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{WINNERS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/profile",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{SHOPE_EATS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/profile",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Change Password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{SHOPE_EATS_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{KEYNDEX_URL}}/auth/change-password",
+									"host": [
+										"{{KEYNDEX_URL}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Projects",
+					"item": []
+				},
+				{
+					"name": "tasks",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "v2",
+			"item": [
+				{
+					"name": "test",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "WINNERS_URL_LOCAL",
+			"value": "https://",
+			"type": "string"
+		},
+		{
+			"key": "WINNERS_URL_LIVE",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "WINNERS_TOKEN",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
