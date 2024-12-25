@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
@@ -75,7 +74,6 @@ class SubscriptionController extends Controller
                 'payment_method' => ['required', new Enum(PaymentMethodEnum::class)],
             ]);
         }
-
 
         $data = SubscriptionHistory::create([
             'code' => Helper::generateCode($subscriptionPlan->plan_name, $request->payment_method),

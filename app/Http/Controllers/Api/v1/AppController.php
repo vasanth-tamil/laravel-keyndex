@@ -8,10 +8,7 @@ use Illuminate\Http\Response;
 
 use App\Enums\PolicyTypeEnum;
 
-use App\Models\Banner;
 use App\Models\Policy;
-use App\Models\Project;
-use App\Models\Task;
 
 class AppController extends Controller
 {
@@ -29,12 +26,8 @@ class AppController extends Controller
     }
 
     public function home(Request $request) {
-        $data = [
-            "banners" => Banner::where('status', true)->get(),
-            "filters" => [],
-            "projects" => Project::latest()->limit(8)->get(),
-            "tasks" => Task::latest()->limit(20)->get(),
-        ];
+        $data = [];
+
         return $this->apiResponse($data, Response::HTTP_OK);
     }
 
@@ -42,14 +35,13 @@ class AppController extends Controller
     public function policy(Request $request, $type='privacy') {
         $policyTypeEnum = PolicyTypeEnum::tryFrom($type);
 
-        if(!$policyTypeEnum) {
-            return $this->apiResponse([], Response::HTTP_NOT_FOUND);
+        if($policyTypeEnum) {
+            $data = Policy::where('type', $policyTypeEnum->value)->first();
+            if($data) {
+                return $this->apiResponse($data, Response::HTTP_OK);
+            }
         }
 
-        $data = Policy::where('type', $policyTypeEnum->value)->first();
-        if($data) {
-            return $this->apiResponse($data, Response::HTTP_OK);
-        }
         return $this->apiResponse([], Response::HTTP_NOT_FOUND);
     }
 }

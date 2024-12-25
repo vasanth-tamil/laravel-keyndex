@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
+use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-
-use Laravel\Sanctum\PersonalAccessToken;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
+use App\Enums\LoginTypeEnum;
+use App\Helpers\Helper;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\LoginActivity;
 
 class AuthController extends Controller
 {
@@ -50,6 +50,18 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = User::find(Auth::id());
             $authToken = $user->createToken($user->f_name . '-access-token')->plainTextToken;
+
+            // CREATE LOGIN SESSION
+            LoginActivity::create([
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->header('User-Agent', 'unknown'),
+                'login_type' => LoginTypeEnum::EMAIL,
+                'login_in_at' => now(),
+                'operating_system' => Helper::getOperatingSystem($request->header('User-Agent', 'unknown')),
+                'status' => true,
+
+                'user_id' => $user->id,
+            ]);
 
             return $this->apiResponse(['access_token' => $authToken, 'user' => $user], Response::HTTP_OK);
         }
@@ -134,7 +146,7 @@ class AuthController extends Controller
             $user = $user->first();
 
             // SEND OTP
-            Helper::send_otp($user->email);
+            Helper::sendOtp($user->email);
             return $this->apiResponse(['message' => 'OTP sent successfully'], Response::HTTP_OK);
         }
         return $this->apiResponse([], Response::HTTP_NOT_FOUND);

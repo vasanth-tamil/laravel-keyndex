@@ -25,4 +25,8 @@ class Notification extends Model
         'status' => 'boolean',
         'type' => NotificationTypeEnum::class,
     ];
+
+    public function scopeType($query, $type) {
+        return $query->where('type', $type);
+    }
 }

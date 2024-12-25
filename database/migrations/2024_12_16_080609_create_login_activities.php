@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('user_agent')->nullable();
             $table->timestamp('logged_in_at')->useCurrent();
             $table->timestamp('logged_out_at')->nullable();
-            $table->enum('operating_system', ['linux', 'windows', 'mac', 'android'])->nullable();
+            $table->enum('operating_system', ['linux', 'windows', 'mac', 'android', 'ios', 'unknown'])->nullable();
             $table->enum('login_type', ['email', 'google'])->nullable();
             $table->boolean('status')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');

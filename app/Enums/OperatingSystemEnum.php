@@ -8,4 +8,6 @@ enum OperatingSystemEnum: string
     case WINDOWS = 'windows';
     case MAC = 'mac';
     case ANDROID = 'android';
+    case IOS = 'ios';
+    case UNKNOWN = 'unknown';
 }

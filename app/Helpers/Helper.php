@@ -4,8 +4,18 @@ namespace App\Helpers;
 
 use Illuminate\Support\Str;
 
-class Helper {
-    static function formatPagination($data) {
+use App\Enums\OperatingSystemEnum;
+
+class Helper
+{
+    /**
+     * Format paginated data for API response.
+     *
+     * @param \Illuminate\Contracts\Pagination\LengthAwarePaginator $data
+     * @return array
+     */
+    public static function formatPagination($data): array
+    {
         return [
             'data' => $data->items(),
             'pagination' => [
@@ -19,92 +29,182 @@ class Helper {
         ];
     }
 
-    // param price { double }
-    // param gst { double }
-    // return { double }
-    static function getPercentageToValue($price, $percentage) {
-        return floatVal(($percentage / 100) * floatVal($price));
+    /**
+     * Calculate percentage value of a given price.
+     *
+     * @param float $price
+     * @param float $percentage
+     * @return float
+     */
+    public static function getPercentageToValue(float $price, float $percentage): float
+    {
+        return ($percentage / 100) * $price;
     }
 
-    // calculate gst
-    // param price { double }
-    // param gst { double }
-    static function calculateGST($price, $gst) {
+    /**
+     * Calculate GST value.
+     *
+     * @param float $price
+     * @param float $gst
+     * @return float
+     */
+    public static function calculateGST(float $price, float $gst): float
+    {
         return self::getPercentageToValue($price, $gst);
     }
 
-    // validate email
-    // param email { string }
-    // return { boolean }
-    static function validateEmail($email) {
-        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    /**
+     * Validate email address.
+     *
+     * @param string $email
+     * @return bool
+     */
+    public static function validateEmail(string $email): bool
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
     }
 
-    // param price { double }
-    // param offer { double }
-    // param isPercentage { boolean }
-    // return { boolean }
-    static function calculateOffer($productPrice, $offer, $offerType=false) {
-        // ? isPercentage is true
-        // ? then calculate percentage otherwise value offer is price
-        return $offerType ? $offer :self::getPercentageToValue($productPrice, $offer);
-
+    /**
+     * Calculate discount offer value.
+     *
+     * @param float $productPrice
+     * @param float $offer
+     * @param bool $isPercentage
+     * @return float
+     */
+    public static function calculateOffer(float $productPrice, float $offer, bool $isPercentage = false): float
+    {
+        return $isPercentage ? self::getPercentageToValue($productPrice, $offer) : $offer;
     }
 
-
-    // parse normal date string return mysql timestring dataformat
-    static function formatTimestamp($date) {
+    /**
+     * Format a date string into a MySQL timestamp.
+     *
+     * @param string $date
+     * @return string
+     */
+    public static function formatTimestamp(string $date): string
+    {
         return date('Y-m-d H:i:s', strtotime($date));
     }
 
-    // check login use is company owner or company employee
-    // if company owner set primary key
-    // other wise employee set company id
-    static function getCompanyId($user) {
-        return $user->role == 'company' ? $user->id: $user->company_id;
+    /**
+     * Get the company ID for a user.
+     *
+     * @param object $user
+     * @return int
+     */
+    public static function getCompanyId(object $user): int
+    {
+        return $user->role === 'company' ? $user->id : $user->company_id;
     }
 
-    // generate code <date> - <monthOfAlphapetics> - <fullYear> - <productType>
-    // first date
-    // 12 months A - L letters based on month
-    // middle full year
-    // last which type of item
-    static function generateCode($name, $paymentMethod) {
+    /**
+     * Generate a unique code based on input parameters.
+     *
+     * @param string $name
+     * @param string $paymentMethod
+     * @return string
+     */
+    public static function generateCode(string $name, string $paymentMethod): string
+    {
         $MONTHS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
-
-        // return $prefix . '-' . date('d') . $MONTHS[intVal(date('m')) - 1] . date('Y') . $count + 1;
-        return 'SUB@' . strtoupper(substr($paymentMethod, 0, 2)) . '-' . strtoupper(substr($name, 0, 2)) . date('d') . $MONTHS[intVal(date('m')) - 1] . date('Y') . '-' . strtoupper(Str::random(10));
+        $monthLetter = $MONTHS[intval(date('m')) - 1];
+        return 'SUB@' . strtoupper(substr($paymentMethod, 0, 2)) . '-' .
+            strtoupper(substr($name, 0, 2)) . date('d') . $monthLetter . date('Y') . '-' . strtoupper(Str::random(10));
     }
 
-    // parse phone number send http client request and send otp
-    // successfully sended return true otherwise false
-    static function send_otp($phoneNumber) {
-        $otp = strVal(random_int(100000,999999));
-        return $otp;
+    /**
+     * Generate and return an OTP.
+     *
+     * @param string $phoneNumber
+     * @return string
+     */
+    public static function sendOtp(string $phoneNumber): string
+    {
+        return (string)random_int(100000, 999999);
     }
 
-    // get request file object and directory name
-    // store File on specified directory and return filename with extension
-    static function uploadFile($requestFileObj, $uploadDir) {
+    /**
+     * Upload a file to the specified directory.
+     *
+     * @param \Illuminate\Http\UploadedFile $requestFileObj
+     * @param string $uploadDir
+     * @return string
+     */
+    public static function uploadFile($requestFileObj, string $uploadDir): string
+    {
         $fileName = Str::random(10) . '.' . $requestFileObj->getClientOriginalExtension();
-        $requestFileObj->move(public_path('uploads/'. $uploadDir), $fileName);
+        $requestFileObj->move(public_path('uploads/' . $uploadDir), $fileName);
         return $fileName;
     }
 
-    // parse filename and directory return absolute path
-    static function getImagePath($fileName, $uploadDir) {
+    /**
+     * Get the full URL of an uploaded file.
+     *
+     * @param string $fileName
+     * @param string $uploadDir
+     * @return string
+     */
+    public static function getImagePath(string $fileName, string $uploadDir): string
+    {
         return asset("uploads/$uploadDir/$fileName");
     }
 
-    static function formatPrice($price) {
-        return '₹ ' . preg_replace("/(\d+?)(?=(\d\d)+(\d)(?!\d))(\.\d+)?/i", "$1,", $price);
+    /**
+     * Format price into a currency string.
+     *
+     * @param float $price
+     * @return string
+     */
+    public static function formatPrice(float $price): string
+    {
+        return '₹ ' . number_format($price, 2);
     }
 
-    static function formatDate($timestamp) {
+    /**
+     * Format a timestamp into a readable date.
+     *
+     * @param string $timestamp
+     * @return string
+     */
+    public static function formatDate(string $timestamp): string
+    {
         return date('M d, Y', strtotime($timestamp));
     }
 
-    static function send_invite($email) {
+    /**
+     * Generate an invite token for an email.
+     *
+     * @param string $email
+     * @return string
+     */
+    public static function sendInvite(string $email): string
+    {
         return Str::random(50);
+    }
+
+    /**
+     * Generate a random string.
+     *
+     * @return string
+     */
+    public static function getOperatingSystem($userAgent): string
+    {
+        $patterns = [
+            '/linux/i' => OperatingSystemEnum::LINUX,
+            '/windows nt/i' => OperatingSystemEnum::WINDOWS,
+            '/mac os|macintosh/i' => OperatingSystemEnum::MAC,
+            '/android/i' => OperatingSystemEnum::ANDROID,
+            '/ios|iphone|ipad/i' => OperatingSystemEnum::IOS,
+        ];
+
+        foreach ($patterns as $pattern => $os) {
+            if (preg_match($pattern, $userAgent)) {
+                return $os->value;
+            }
+        }
+
+        return OperatingSystemEnum::UNKNOWN->value;
     }
 }

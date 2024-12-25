@@ -11,12 +11,7 @@ use App\Helpers\Helper;
 class NotificationController extends Controller
 {
     public function index(Request $request) {
-        $data = Notification::when($request->type, function ($query) use ($request) {
-                                if($request->type == 'single') {
-                                    $query->where('type', $request->user()->id);
-                                }
-                                $query->where('type', $request->type);
-                            })
+        $data = Notification::type($request->type)
                             ->latest()
                             ->paginate(config('api.v1.pagination'));
         return $this->apiResponse(Helper::formatPagination($data), 200);
