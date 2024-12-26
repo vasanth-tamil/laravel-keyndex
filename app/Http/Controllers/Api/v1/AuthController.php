@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use App\Enums\LoginTypeEnum;
+use App\Enums\VerificationTypeEnum;
 use App\Helpers\Helper;
 use App\Models\User;
 use App\Models\LoginActivity;
+use App\Models\VerificationCode;
 
 class AuthController extends Controller
 {
@@ -28,6 +30,15 @@ class AuthController extends Controller
 
         // CREATE USER
         $user = User::create($validateData);
+
+        // SEND OTP
+        VerificationCode::create([
+            'code' => Helper::getOTP(),
+            'type' => VerificationTypeEnum::EMAIL->value,
+            'is_used' => false,
+            'expires_at' => now()->addMinutes(5),
+            'user_id' => $user->id
+        ]);
 
         // CREATE TOKEN
         $authToken = $user->createToken($user->f_name . '-access-token')->plainTextToken;
@@ -50,6 +61,11 @@ class AuthController extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = User::find(Auth::id());
             $authToken = $user->createToken($user->f_name . '-access-token')->plainTextToken;
+
+            // VERIFY EMAIL
+            if ($user->email_verified_at == null) {
+                return $this->apiResponse(['error' => 'email not verified.'], Response::HTTP_UNAUTHORIZED);
+            }
 
             // CREATE LOGIN SESSION
             LoginActivity::create([
@@ -135,13 +151,79 @@ class AuthController extends Controller
         return $this->apiResponse([], Response::HTTP_NOT_FOUND);
     }
 
+    public function verify_otp(Request $request)
+    {
+        // CHECK OTP MATCH
+        $verify = VerificationCode::unusedEmailCode($request->user()->id, $request->otp)->first();
+
+        // Check if OTP exists
+        if (!$verify) {
+            return $this->apiResponse(['errors' => 'OTP does not match or has already been used.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // CHECK IF OTP IS EXPIRED
+        if ($verify->isExpired()) {
+            return $this->apiResponse(['errors' => 'OTP expired.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        // MARK OTP AS USED
+        $verify->is_used = true;
+        $verify->save();
+
+        // MARK EMAIL AS VERIFIED
+        $user = $request->user();
+        $user->email_verified_at = now();
+        $user->save();
+
+        // REMOVE CURRENT TOKEN
+        $request->user()->currentAccessToken()->delete();
+
+        // SEND REFRESH TOKEN
+        $authToken = $user->createToken($user->id . '-access-token')->plainTextToken;
+
+        $data = [
+            'access_token' => $authToken,
+            'user' => $user
+        ];
+
+        return $this->apiResponse($data, Response::HTTP_OK);
+    }
+
+    public function resend_otp(Request $request) {
+        $validateData = $request->validate([
+            "email" => "required|email|exists:users,email",
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->exists()) {
+            $otpCount = VerificationCode::dailyOtpCount($user->id, VerificationTypeEnum::EMAIL->value);
+
+            if ($otpCount >= 6) {
+                return $this->apiResponse(['errors' => 'Daily OTP limit reached.'], Response::HTTP_TOO_MANY_REQUESTS);
+            }
+
+            // SEND OTP
+            VerificationCode::updateOrCreate([
+                'code' => Helper::getOTP(),
+                'type' => VerificationTypeEnum::EMAIL->value,
+                'is_used' => false,
+                'expires_at' => now()->addMinutes(5),
+                'user_id' => $user->id
+            ]);
+
+            return $this->apiResponse(['message' => 'OTP sent successfully'], Response::HTTP_OK);
+        }
+        return $this->apiResponse([], Response::HTTP_NOT_FOUND);
+    }
+
     public function forget_password(Request $request)
     {
         $validateData = $request->validate([
             "email" => "required|email|exists:users,email",
         ]);
 
-        $user = User::where('email', $request->email);
+        $user = User::where('email', $request->email)->first();
         if ($user->exists()) {
             $user = $user->first();
 

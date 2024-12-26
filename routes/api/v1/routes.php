@@ -10,6 +10,8 @@ Route::group(['prefix' => config('api.v1.prefix'), 'namespace' => config('api.v1
         Route::controller(AuthController::class)->group(function () {
             Route::post('/sign-up', 'sign_up');
             Route::post('/sign-in', 'sign_in');
+            Route::post('/resend-otp', 'resend_otp');
+            Route::get('/verify-token', 'verify_token');
             Route::get('/forget-password', 'forget_password');
         });
     });
@@ -65,6 +67,7 @@ Route::group(['prefix' => config('api.v1.prefix'), 'namespace' => config('api.v1
             Route::controller(AuthController::class)->group(function () {
                 Route::get('/profile', 'profile');
                 Route::post('/profile', 'update_profile');
+                Route::post('/verify-otp', 'verify_otp');
                 Route::post('/change-password', 'change_password');
                 Route::get('/sign-out', 'sign_out');
             });

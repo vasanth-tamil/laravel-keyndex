@@ -117,10 +117,9 @@ class Helper
     /**
      * Generate and return an OTP.
      *
-     * @param string $phoneNumber
      * @return string
      */
-    public static function sendOtp(string $phoneNumber): string
+    public static function getOTP(): string
     {
         return (string)random_int(100000, 999999);
     }

@@ -21,12 +21,12 @@ class SubscriptionHistory extends Model
         'subscription_plan_id',
         'subscriber_id'
     ];
+
     protected $casts = [
         'status' => 'boolean',
         'payment_method' => PaymentMethodEnum::class,
         'status' => PaymentStatusEnum::class,
     ];
-
 
     public function subscriptionPlan()
     {
