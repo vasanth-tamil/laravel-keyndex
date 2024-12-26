@@ -67,18 +67,6 @@ class AuthController extends Controller
                 return $this->apiResponse(['error' => 'email not verified.'], Response::HTTP_UNAUTHORIZED);
             }
 
-            // CREATE LOGIN SESSION
-            LoginActivity::create([
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->header('User-Agent', 'unknown'),
-                'login_type' => LoginTypeEnum::EMAIL,
-                'login_in_at' => now(),
-                'operating_system' => Helper::getOperatingSystem($request->header('User-Agent', 'unknown')),
-                'status' => true,
-
-                'user_id' => $user->id,
-            ]);
-
             return $this->apiResponse(['access_token' => $authToken, 'user' => $user], Response::HTTP_OK);
         }
 
@@ -175,6 +163,18 @@ class AuthController extends Controller
         $user->email_verified_at = now();
         $user->save();
 
+        // CREATE LOGIN SESSION
+        LoginActivity::create([
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('User-Agent', 'unknown'),
+            'login_type' => LoginTypeEnum::EMAIL,
+            'login_in_at' => now(),
+            'operating_system' => Helper::getOperatingSystem($request->header('User-Agent', 'unknown')),
+            'status' => true,
+
+            'user_id' => $user->id,
+        ]);
+
         // REMOVE CURRENT TOKEN
         $request->user()->currentAccessToken()->delete();
 
@@ -228,7 +228,14 @@ class AuthController extends Controller
             $user = $user->first();
 
             // SEND OTP
-            Helper::sendOtp($user->email);
+            VerificationCode::create([
+                'code' => Helper::getOTP(),
+                'type' => VerificationTypeEnum::EMAIL->value,
+                'is_used' => false,
+                'expires_at' => now()->addMinutes(5),
+                'user_id' => $user->id
+            ]);
+
             return $this->apiResponse(['message' => 'OTP sent successfully'], Response::HTTP_OK);
         }
         return $this->apiResponse([], Response::HTTP_NOT_FOUND);

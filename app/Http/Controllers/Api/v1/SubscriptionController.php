@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 
 use App\Enums\PaymentMethodEnum;
+use App\Enums\PaymentStatusEnum;
 
 use App\Helpers\Helper;
 use App\Models\SubscriptionHistory;
@@ -30,8 +31,16 @@ class SubscriptionController extends Controller
         // CHECK SUBSCRIPTION ON MONTHLY PLAN OR YEARLY CHECK
         $subscriptionPlan = SubscriptionPlan::findOrFail($id);
 
+        // CHECK ALREADY SUBSCRIBED
+        $activeSubscription = SubscriptionHistory::isPlanActive()->where('subscriber_id', $request->user()->id)->first();
+
+        if($activeSubscription) {
+            return $this->apiResponse(['error' => 'You are already subscribed to a plan. You can only subscribe to one plan at a time.'], Response::HTTP_BAD_REQUEST);
+        }
+
         $paymentRef = null;
         $paymentMethod = null;
+        $paymentStatus = PaymentStatusEnum::PENDING->value;
 
         if($subscriptionPlan->price != 0) {
             $validatedData = $request->validate([
@@ -41,6 +50,8 @@ class SubscriptionController extends Controller
 
             $paymentRef = $request->payment_ref;
             $paymentMethod = $request->payment_method;
+        } else {
+            $paymentStatus = PaymentStatusEnum::PAID->value;
         }
 
         // CHECK ONLINE PAYMENT METHOD
@@ -51,8 +62,9 @@ class SubscriptionController extends Controller
             'price' => $subscriptionPlan->price,
             'payment_ref' => $paymentRef,
             'payment_method' => $paymentMethod,
+            'status' => $paymentStatus,
             'subscribed_at' => now(),
-            'expires_at' => now()->addDays($subscriptionPlan->duration),
+            'expires_at' => now()->addDays($subscriptionPlan->days),
             'subscription_plan_id' => $subscriptionPlan->id,
             'subscriber_id' => $request->user()->id
         ]);
@@ -74,6 +86,7 @@ class SubscriptionController extends Controller
                 'payment_method' => ['required', new Enum(PaymentMethodEnum::class)],
             ]);
         }
+
 
         $data = SubscriptionHistory::create([
             'code' => Helper::generateCode($subscriptionPlan->plan_name, $request->payment_method),
