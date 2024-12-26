@@ -80,13 +80,16 @@ class SubscriptionController extends Controller
     {
         $subscriptionPlan = SubscriptionPlan::findOrFail($id);
 
+        if($subscriptionPlan->status == 0) {
+            return $this->apiResponse(['errors' => 'This plan is not available.'], Response::HTTP_BAD_REQUEST);
+        }
+
         if($subscriptionPlan->price != 0) {
             $validatedData = $request->validate([
                 'payment_ref' => 'required|string',
                 'payment_method' => ['required', new Enum(PaymentMethodEnum::class)],
             ]);
         }
-
 
         $data = SubscriptionHistory::create([
             'code' => Helper::generateCode($subscriptionPlan->plan_name, $request->payment_method),
