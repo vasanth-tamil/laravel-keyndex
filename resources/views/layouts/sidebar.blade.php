@@ -4,6 +4,7 @@
         (object) ['icon' => 'ti-users', 'label' => 'Users', 'route' => 'admin.user'],
         (object) ['icon' => 'ti-notification', 'label' => 'Notifications', 'route' => 'admin.notification'],
         (object) ['icon' => 'ti-notes', 'label' => 'Login Logs', 'route' => 'admin.login-activity'],
+        (object) ['icon' => 'ti-database-export', 'label' => 'Backups', 'route' => 'admin.login-activity'],
         (object) [
             'icon' => 'ti-credit-card',
             'label' => 'Subscriptions',
@@ -13,7 +14,7 @@
             ],
         ],
         (object) [
-            'icon' => 'ti-device-mobile',
+            'icon' => 'ti-settings',
             'label' => 'Configurations',
             'routes' => [
                 (object) ['label' => 'Policies', 'route' => 'admin.policy'],
@@ -21,9 +22,9 @@
             ],
         ],
         (object) [
-            'iconImg' => asset('assets/icon/logo.png'),
-            'label' => 'keyndex',
-            'route' => 'admin.login-activity',
+            'icon' => 'ti-plug-connected',
+            'label' => 'Plugins',
+            'route' => 'admin.policy',
         ],
     ];
 @endphp
