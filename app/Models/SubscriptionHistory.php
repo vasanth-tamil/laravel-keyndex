@@ -38,6 +38,12 @@ class SubscriptionHistory extends Model
         return $this->belongsTo(SubscriptionPlan::class);
     }
 
+    public function scopeIsSubscribed($query)
+    {
+        return $query->where('status', PaymentStatusEnum::PAID)
+            ->where('expires_at', '>', now());
+    }
+
     public function subscriber()
     {
         return $this->belongsTo(User::class);

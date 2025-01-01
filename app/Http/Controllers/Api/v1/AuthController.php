@@ -67,6 +67,15 @@ class AuthController extends Controller
                 return $this->apiResponse(['error' => 'email not verified.'], Response::HTTP_UNAUTHORIZED);
             }
 
+            // SEND OTP
+            VerificationCode::create([
+                'code' => Helper::getOTP(),
+                'type' => VerificationTypeEnum::EMAIL->value,
+                'is_used' => false,
+                'expires_at' => now()->addMinutes(5),
+                'user_id' => $user->id
+            ]);
+
             return $this->apiResponse(['access_token' => $authToken, 'user' => $user], Response::HTTP_OK);
         }
 
