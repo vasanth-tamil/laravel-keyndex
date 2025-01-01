@@ -20,6 +20,11 @@
                 (object) ['label' => 'Website', 'route' => 'admin.policy'],
             ],
         ],
+        (object) [
+            'iconImg' => asset('assets/icon/logo.png'),
+            'label' => 'keyndex',
+            'route' => 'admin.login-activity',
+        ],
     ];
 @endphp
 
@@ -31,7 +36,7 @@
         </button>
         <h1 class="navbar-brand pt-lg-5">
             <label href="#" class="unset">
-                <img src="{{ asset('assets/icon/icon.svg') }}" class="img-fluid" />
+                <img src="{{ asset('assets/icon/icon.svg') }}" class="align-middle" />
             </label>
         </h1>
         <div class="navbar-nav flex-row d-lg-none">
@@ -214,7 +219,11 @@
                             <a class="nav-link" href="{{ route($sidebar->route) }}">
                                 <span
                                     class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                                    <i class="ti {{ $sidebar->icon }} fs-2"></i>
+                                    @if (isset($sidebar->icon))
+                                        <i class="ti {{ $sidebar->icon }} fs-2"></i>
+                                    @else
+                                        <img src="{{ $sidebar->iconImg }}" />
+                                    @endif
                                 </span>
                                 <span class="nav-link-title">
                                     {{ $sidebar->label }}

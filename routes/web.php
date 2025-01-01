@@ -5,8 +5,14 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => config('web.prefix'), 'namespace' => 'App\Http\Controllers\Web'], function () {
     Route::controller(WebController::class)->group(function () {
         Route::get('/', 'index')->name('home');
-        Route::get('/{page}', 'index')->name('page');
+        Route::get('/page/{page}', 'index')->name('page');
     });
+
+    Route::controller(InstallController::class)->group(function () {
+        Route::get('/installation', 'installation')->name('installation');
+        Route::post('/install', 'install')->name('install');
+    });
+
 });
 
 Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers\Web\Admin'], function () {
