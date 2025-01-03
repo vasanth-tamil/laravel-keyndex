@@ -21,6 +21,35 @@ class AppController extends Controller
         return $this->apiResponse($data, 200);
     }
 
+
+    public function save_settings(Request $request)
+    {
+        $validateData = $request->validate([
+            "theme" => "required|array",
+            "theme.dark" => "required|boolean",
+
+            "secure_access" => "required|array",
+            "secure_access.enable" => "required|boolean",
+            "secure_access.methods" => "required|array",
+            "secure_access.methods.email" => "required|boolean",
+            "secure_access.methods.sms" => "required|boolean",
+
+            "notifications" => "required|array",
+            "notifications.sms" => "required|boolean",
+            "notifications.email" => "required|boolean",
+            "notifications.push" => "required|boolean",
+        ]);
+
+        $data = Setting::firstOrCreate([
+            "key" => "mobile_settings",
+            "user_id" => $request->user()->id,
+        ], [
+            "value" => $validateData,
+        ]);
+        return $this->apiResponse($data, Response::HTTP_OK);
+    }
+
+
     public function search(Request $request) {
         return $this->apiResponse([], Response::HTTP_OK);
     }

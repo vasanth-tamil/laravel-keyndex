@@ -22,6 +22,7 @@ Route::group(['prefix' => config('api.v1.prefix'), 'namespace' => config('api.v1
         Route::group(['prefix' => 'app'], function () {
             Route::controller(AppController::class)->group(function () {
                 Route::get('/config', 'config');
+                Route::post('/settings', 'save_settings');
                 Route::get('/home', 'home');
                 Route::get('/search', 'search');
                 Route::get('/policy/{type}', 'policy');
