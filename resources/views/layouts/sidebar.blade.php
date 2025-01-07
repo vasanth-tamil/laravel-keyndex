@@ -4,7 +4,7 @@
         (object) ['icon' => 'ti-users', 'label' => 'Users', 'route' => 'admin.user'],
         (object) ['icon' => 'ti-notification', 'label' => 'Notifications', 'route' => 'admin.notification'],
         (object) ['icon' => 'ti-notes', 'label' => 'Login Logs', 'route' => 'admin.login-activity'],
-        (object) ['icon' => 'ti-database-export', 'label' => 'Backups', 'route' => 'admin.login-activity'],
+        (object) ['icon' => 'ti-database-export', 'label' => 'Backups', 'route' => 'admin.backup.index'],
         (object) [
             'icon' => 'ti-credit-card',
             'label' => 'Subscriptions',

@@ -51,4 +51,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers\Web\Admi
             Route::get('/', 'index')->name('admin.notification');
         });
     });
+
+    Route::group(['prefix' => 'backup'], function () {
+        Route::controller(BackupController::class)->group(function () {
+            Route::get('/', 'index')->name('admin.backup.index');
+            Route::get('/backup', 'backup')->name('admin.backup.create');
+            Route::get('/download/{id}', 'download')->name('admin.backup.download');
+        });
+    });
 });

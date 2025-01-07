@@ -22,12 +22,12 @@ return new class extends Migration
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
             $table->boolean('is_subscribed')->default(false);
+            $table->foreignId('subscription_plan_id')->nullable()->onDelete('cascade');
             $table->boolean('status')->default(true);
             $table->string('fcm_token')->nullable(); // FIREBASE DIVICE TOKEN
             $table->rememberToken();
             $table->timestamps();
         });
-
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
