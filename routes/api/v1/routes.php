@@ -33,6 +33,9 @@ Route::group(['prefix' => config('api.v1.prefix'), 'namespace' => config('api.v1
         Route::group(['prefix' => 'subscription'], function () {
             Route::controller(SubscriptionController::class)->group(function () {
                 Route::get('/', 'index');
+                Route::get('/cancel', 'cancel');
+                Route::get('/history', 'show_history');
+                Route::get('/subscription-plans', 'available_plans');
                 Route::get('/{id}', 'show_subscription');
                 Route::get('/plan/{id}', 'show');
 

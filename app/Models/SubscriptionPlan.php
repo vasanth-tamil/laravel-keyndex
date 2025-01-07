@@ -23,8 +23,20 @@ class SubscriptionPlan extends Model
         'features' => 'json',
     ];
 
+    protected $appends = ['is_current_plan'];
+
     public function histories()
     {
         return $this->hasMany(SubscriptionHistory::class);
+    }
+
+    public function scopeIsActive($query)
+    {
+        return $query->where('status', true);
+    }
+
+    public function getIsCurrentPlanAttribute()
+    {
+        return auth()->user()->subscription_plan_id == $this->id;
     }
 }

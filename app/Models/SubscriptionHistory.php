@@ -28,20 +28,21 @@ class SubscriptionHistory extends Model
         'status' => PaymentStatusEnum::class,
     ];
 
-    public function scopeIsPlanActive($query) {
-        return $query->where('status', PaymentStatusEnum::PAID)
-                     ->where('expires_at', '>', now());
-    }
-
-    public function subscriptionPlan()
+    public function scopeIsPlanActive($query)
     {
-        return $this->belongsTo(SubscriptionPlan::class);
+        return $query->where('status', PaymentStatusEnum::PAID)
+            ->where('expires_at', '>', now());
     }
 
     public function scopeIsSubscribed($query)
     {
         return $query->where('status', PaymentStatusEnum::PAID)
             ->where('expires_at', '>', now());
+    }
+
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(SubscriptionPlan::class);
     }
 
     public function subscriber()
