@@ -60,11 +60,6 @@ Route::group(['prefix' => config('api.v1.prefix'), 'namespace' => config('api.v1
                 Route::post('/logout-device/{id}', 'logout_device');
             });
         });
-        // ORGANIZATION
-        // PENDING IMPLEMENTATION
-
-        // CHATS
-        // IMPLEMENTATION LATER
 
         // USER ACTIONS
         Route::group(['prefix' => 'auth'], function () {

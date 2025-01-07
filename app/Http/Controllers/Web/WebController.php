@@ -12,6 +12,6 @@ class WebController extends Controller
     }
 
     public function page(Request $request, $page) {
-        return view('page');
+        return view('page', compact('page'));
     }
 }
