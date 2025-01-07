@@ -3,9 +3,10 @@
 @section('title', 'Admin Dashboard')
 
 @section('header-title', 'Installation Setup')
+
 @section('content')
     <div class="vh-100 d-flex justify-content-center align-items-center">
-        <div class="card shadow p-4" style="width: 350px;">
+        <div class="card shadow p-5" style="width: 400px;">
             <div class="text-center">
                 <img src="assets/icon/icon.svg" alt="Icon">
             </div>

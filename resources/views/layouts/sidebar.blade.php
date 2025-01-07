@@ -14,12 +14,18 @@
             ],
         ],
         (object) [
-            'icon' => 'ti-settings',
+            'icon' => 'ti-devices',
             'label' => 'Configurations',
             'routes' => [
                 (object) ['label' => 'Policies', 'route' => 'admin.policy'],
                 (object) ['label' => 'Website', 'route' => 'admin.policy'],
+                (object) ['label' => 'Mail Settings', 'route' => 'admin.policy'],
             ],
+        ],
+        (object) [
+            'icon' => 'ti-api',
+            'label' => 'API Console',
+            'route' => 'admin.policy',
         ],
         (object) [
             'icon' => 'ti-plug-connected',

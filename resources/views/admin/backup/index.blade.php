@@ -3,12 +3,19 @@
 @section('title', 'Admin Login Activity')
 @section('header-title', 'Activity Logs')
 
+@section('header-actions')
+    <div class="btn-list">
+        <div class="d-flex justify-content-end align-items-center">
+            <a href="{{ route('admin.backup.create') }}" class="btn btn-primary">
+                Backup Now
+                <i class="ti ti-database-export ps-2"></i>
+            </a>
+        </div>
+    </div>
+@endsection
 @section('content')
     <div class="card">
         <div class="card-body">
-            <div class="mb-3 d-flex justify-content-end">
-                <a href="{{ route('admin.backup.create') }}" class="btn btn-primary">Backup Now</a>
-            </div>
             <div id="table-default" class="table-responsive">
                 <table class="table">
                     <thead>
