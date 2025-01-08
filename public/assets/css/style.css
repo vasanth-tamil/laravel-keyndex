@@ -30,7 +30,8 @@
  }
 
  .table thead th {
-     background: transparent;
+    background: transparent;
+    font-size: 0.7rem;
  }
  .page-title {
      color: #fff;
@@ -52,3 +53,79 @@
  body .text-muted {
      color: rgba(255, 255, 255, 0.6) !important;
  }
+
+
+ /* Light Mode CSS */
+ :root {
+     --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+     --tblr-bg-surface: #ffffff;
+     --tblr-card-bg: #f2f2f2;
+     --tblr-light-mode-border-color: #e0e0e0;
+     --tblr-primary: #2ba742;
+ }
+
+ /* General Light Mode */
+ body.light-mode {
+     background-color: #f5f5f5;
+     color: #333;
+ }
+
+ body.light-mode .modal-content {
+     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1) !important;
+ }
+
+ body.light-mode .card {
+     background-color: #ffffff;
+     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05) !important;
+     color: #333;
+     border: 1px solid var(--tblr-light-mode-border-color);
+ }
+
+body.light-mode .navbar {
+     --tblr-navbar-bg: rgb(17, 17, 17);
+     --tblr-navbar-active-border-color: transparent;
+     color: #333;
+ }
+
+ body.light-mode .table thead th {
+     background: transparent;
+     font-size: 0.7rem;
+     color: #333;
+ }
+
+ body.light-mode .page-title {
+     color: #333;
+ }
+
+ body.light-mode .text-primary {
+     color: #007bff !important;
+ }
+
+ body.light-mode .text-secondary {
+     color: #6c757d !important;
+ }
+
+ body.light-mode .text-muted {
+     color: rgba(0, 0, 0, 0.6) !important;
+ }
+
+
+/* LOADING */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #F5F5F5;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}

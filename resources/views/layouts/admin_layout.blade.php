@@ -22,6 +22,16 @@
 </head>
 
 <body>
+    {{-- LOADING --}}
+    <div id="loading">
+        <div>
+            <div class="spinner-border spinner-border-md text-dark" style="width: 3rem; height: 3rem;">
+            </div>
+            <p class="mt-2 text-dark fw-bold">Loading</p>
+        </div>
+    </div>
+
+    {{-- REAL CONTENT --}}
     <div class="page">
         <!-- Sidebar -->
         @include('layouts.sidebar')
@@ -50,6 +60,37 @@
     <!-- Tabler Core -->
     <script src="{{ asset('assets/js/tabler.min.js') }}" defer></script>
     <script src="{{ asset('assets/js/demo.min.js') }}" defer></script>
+    <script>
+        (() => {
+            const body = document.body;
+
+            // Get the current theme from localStorage (default is 'false')
+            const isLightMode = localStorage.getItem('isLightMode') === 'true';
+
+            // Apply the theme on page load
+            body.classList.toggle('light-mode', isLightMode);
+        })();
+
+        const toggleTheme = () => {
+            const body = document.body;
+
+            // Toggle the light mode class
+            const isLightMode = body.classList.toggle('light-mode');
+
+            // Save the new state to localStorage
+            localStorage.setItem('isLightMode', isLightMode);
+        };
+
+        // Hide the loading animation after the page loads
+        window.addEventListener('load', () => {
+            const loading = document.getElementById('loading');
+            const content = document.getElementById('content');
+
+            // Hide loading and show content
+            loading.classList.add('hidden');
+            content.style.display = 'block';
+        });
+    </script>
 
     @yield('script_top')
     @yield('script_bottom')
