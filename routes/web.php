@@ -54,6 +54,12 @@ Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers\Web\Admi
                 });
             });
 
+            Route::group(['prefix' => 'plugin'], function () {
+                Route::controller(PluginController::class)->group(function () {
+                    Route::get('/', 'index')->name('admin.plugin');
+                });
+            });
+
             Route::group(['prefix' => 'notification'], function () {
                 Route::controller(NotificationController::class)->group(function () {
                     Route::get('/', 'index')->name('admin.notification');
