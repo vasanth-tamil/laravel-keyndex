@@ -27,7 +27,7 @@ class BackupController extends Controller
             'file_path' => $backup['path'],
             'file_size' => filesize($backup['path']),
             'checksum' => md5_file($backup['path']),
-            'created_by' => 1,
+            'created_by' => auth()->guard('admin')->user()->id,
             'backup_at' => now(),
         ]);
         notyf()->success($backup['message']);
