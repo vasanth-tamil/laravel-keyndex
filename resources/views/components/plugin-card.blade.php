@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-body">
             <div>
-                <div class="h4 my-1 text-white">Offer Widget</div>
+                <h2 class="h4 my-2">Offer Widget</h2>
                 <p class="text-muted">Lorem ipsum dolor sit amet consectetur adipisicing elit molestias
                     necessitatibus</p>
             </div>

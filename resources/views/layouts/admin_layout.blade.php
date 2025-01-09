@@ -17,8 +17,8 @@
     <link href="{{ asset('assets/css/tabler-vendors.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/demo.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
-    @yield('style_top')
-    @yield('style_bottom')
+    @stack('style_top')
+    @stack('style_bottom')
 </head>
 
 <body>
@@ -88,12 +88,11 @@
 
             // Hide loading and show content
             loading.classList.add('hidden');
-            content.style.display = 'block';
         });
     </script>
 
-    @yield('script_top')
-    @yield('script_bottom')
+    @stack('script_top')
+    @stack('script_bottom')
 </body>
 
 </html>

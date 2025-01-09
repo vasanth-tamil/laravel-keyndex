@@ -117,6 +117,22 @@
      color: #f3f3f3;
  }
 
+ pre {
+     background: #222;
+     color: var(--tblr-light);
+     border-radius: var(--tblr-border-radius);
+ }
+
+ blockquote {
+     padding-left: 1rem;
+     border-left: 2px solid #333;
+ }
+ code {
+    padding: 2px 4px;
+     color: #f3f3f3;
+     background: #444;
+ }
+
  /* Light Mode CSS */
  :root {
      --tblr-font-sans-serif: 'Inter Var', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;

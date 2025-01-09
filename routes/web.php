@@ -29,6 +29,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers\Web\Admi
                 Route::get('/dashboard', 'index')->name('admin.dashboard');
             });
 
+            Route::controller(ServerController::class)->group(function () {
+                Route::get('/uptime', 'uptime')->name('admin.uptime');
+            });
+
             Route::group(['prefix' => 'user'], function () {
                 Route::controller(UserController::class)->group(function () {
                     Route::get('/', 'index')->name('admin.user');

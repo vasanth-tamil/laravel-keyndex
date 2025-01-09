@@ -1,10 +1,10 @@
 @php
     $sidebarData = [
         (object) ['icon' => 'ti-smart-home', 'label' => 'Dashboard', 'route' => 'admin.dashboard'],
+        (object) ['label' => 'A D M I N - S E C T I O N', 'isTitle' => true],
         (object) ['icon' => 'ti-users', 'label' => 'Users', 'route' => 'admin.user'],
         (object) ['icon' => 'ti-notification', 'label' => 'Notifications', 'route' => 'admin.notification'],
-        (object) ['icon' => 'ti-notes', 'label' => 'Login Logs', 'route' => 'admin.login-activity'],
-        (object) ['icon' => 'ti-database-export', 'label' => 'Backups', 'route' => 'admin.backup.index'],
+        (object) ['icon' => 'ti-seo', 'label' => 'SEO Settings', 'route' => 'admin.notification'],
         (object) [
             'icon' => 'ti-credit-card',
             'label' => 'Subscriptions',
@@ -13,6 +13,10 @@
                 (object) ['label' => 'History', 'route' => 'admin.subscription'],
             ],
         ],
+        (object) ['icon' => 'ti-database-export', 'label' => 'Backups', 'route' => 'admin.backup.index'],
+        (object) ['label' => 'S E C U R I T Y', 'isTitle' => true],
+        (object) ['icon' => 'ti-notes', 'label' => 'Login Logs', 'route' => 'admin.login-activity'],
+
         (object) [
             'icon' => 'ti-devices',
             'label' => 'Configurations',
@@ -23,6 +27,12 @@
             ],
         ],
         (object) [
+            'icon' => 'ti-server',
+            'label' => 'Server Uptime',
+            'route' => 'admin.uptime',
+        ],
+        (object) ['label' => '3 P A R TY - S E R V I C E S', 'isTitle' => true],
+        (object) [
             'icon' => 'ti-api',
             'label' => 'API Console',
             'route' => 'admin.policy',
@@ -30,7 +40,7 @@
         (object) [
             'icon' => 'ti-plug-connected',
             'label' => 'Plugins',
-            'route' => 'admin.policy',
+            'route' => 'admin.plugin',
         ],
     ];
 @endphp
@@ -219,53 +229,60 @@
         <div class="collapse navbar-collapse" id="sidebar-menu">
             <ul class="navbar-nav pt-lg-3">
                 {{-- SIDEBAR ITEMS --}}
-                @foreach ($sidebarData as $sidebar)
-                    @if (isset($sidebar->route))
-                        {{-- SIDEBAR ITEM SINGLE --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route($sidebar->route) }}">
-                                <span
-                                    class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                                    @if (isset($sidebar->icon))
-                                        <i class="ti {{ $sidebar->icon }} fs-2"></i>
-                                    @else
-                                        <img src="{{ $sidebar->iconImg }}" />
-                                    @endif
+                @foreach ($sidebarData as $index => $sidebar)
+                    @if (isset($sidebar->isTitle))
+                        <li class="nav-item mt-2">
+                            <a class="nav-link fs-6 text-white fw-bold" href="#">{{ $sidebar->label }}</a>
+                        </li>
+                    @else
+                        @if (isset($sidebar->route))
+                            {{-- SIDEBAR ITEM SINGLE --}}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route($sidebar->route) }}">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+                                        @if (isset($sidebar->icon))
+                                            <i class="ti {{ $sidebar->icon }} fs-2"></i>
+                                        @else
+                                            <img src="{{ $sidebar->iconImg }}" />
+                                        @endif
+                                    </span>
+                                    <span class="nav-link-title">
+                                        {{ $sidebar->label }}
+                                    </span>
+                                </a>
+                            </li>
+                        @else
+                            {{-- SIDEBAR ITEM WITH DROPDOWN  --}}
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                                data-bs-toggle="dropdown" data-bs-auto-close="true" role="button"
+                                aria-expanded="true">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti {{ $sidebar->icon }} fs-2"></i>
                                 </span>
                                 <span class="nav-link-title">
                                     {{ $sidebar->label }}
                                 </span>
                             </a>
-                        </li>
-                    @else
-                        {{-- SIDEBAR ITEM WITH DROPDOWN  --}}
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                            data-bs-toggle="dropdown" data-bs-auto-close="true" role="button" aria-expanded="true">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <i class="ti {{ $sidebar->icon }} fs-2"></i>
-                            </span>
-                            <span class="nav-link-title">
-                                {{ $sidebar->label }}
-                            </span>
-                        </a>
-                        {{-- SIDEBAR ITEM DROPDOWNS --}}
-                        <div class="dropdown-menu">
-                            <div class="dropdown-menu-columns">
-                                @foreach ($sidebar->routes as $sidebarRoute)
-                                    <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="{{ route($sidebarRoute->route) }}">
-                                            {{ $sidebarRoute->label }}
+                            {{-- SIDEBAR ITEM DROPDOWNS --}}
+                            <div class="dropdown-menu">
+                                <div class="dropdown-menu-columns">
+                                    @foreach ($sidebar->routes as $sidebarRoute)
+                                        <div class="dropdown-menu-column">
+                                            <a class="dropdown-item" href="{{ route($sidebarRoute->route) }}">
+                                                {{ $sidebarRoute->label }}
 
-                                            @if (isset($sidebarRoute->isNew))
-                                                <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">
-                                                    New
-                                                </span>
-                                            @endif
-                                        </a>
-                                    </div>
-                                @endforeach
+                                                @if (isset($sidebarRoute->isNew))
+                                                    <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">
+                                                        New
+                                                    </span>
+                                                @endif
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @endif
                 @endforeach
             </ul>
